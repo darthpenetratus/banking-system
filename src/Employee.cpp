@@ -62,5 +62,5 @@ bool Employee::isValidPosition(const std::string& position) {
 }
 
 bool Employee::isValidBranchID(int branchID) {
-    return branchID > 0;  // This should ideally check if the branch exists in the system
+    return branchID > 0;
 }

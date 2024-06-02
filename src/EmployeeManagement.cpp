@@ -107,7 +107,7 @@ void EmployeeManagement::updateEmployee() {
         std::cin.ignore();
         std::getline(std::cin, name);
         std::cout << "Enter new position: ";
-        std::cin >> position;
+        std::getline(std::cin, position);
         std::cout << "Enter new branch ID: ";
         std::cin >> branchID;
         try {
