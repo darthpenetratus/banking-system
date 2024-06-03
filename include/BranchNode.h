@@ -7,7 +7,7 @@ struct BranchNode {
     Branch branch;
     BranchNode* next;
 
-    BranchNode(const Branch& branch) : branch(branch), next(nullptr) {}
+    BranchNode(const Branch& br) : branch(br), next(nullptr) {}
 };
 
 #endif

@@ -52,8 +52,7 @@ bool BankingOperation::isValidOperationID(int operationID) {
 }
 
 bool BankingOperation::isValidDescription(const std::string& description) {
-    std::regex descriptionRegex("^[A-Za-z\\- ,.]{1,255}$");
-    return std::regex_match(description, descriptionRegex);
+    return description.size() <= 255;
 }
 
 bool BankingOperation::isValidDate(const std::string& date) {
@@ -62,5 +61,5 @@ bool BankingOperation::isValidDate(const std::string& date) {
 }
 
 bool BankingOperation::isValidEmployeeID(int employeeID) {
-    return employeeID > 0;  // This should ideally check if the employee exists in the system
+    return employeeID > 0;
 }

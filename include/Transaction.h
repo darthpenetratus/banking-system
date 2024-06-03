@@ -6,7 +6,7 @@
 class Transaction {
 public:
     Transaction(int transactionID, const std::string& date, int senderAccount, int recipientAccount, const std::string& purpose, float amount);
-    
+
     // Getters
     int getTransactionID() const;
     std::string getDate() const;
@@ -14,14 +14,14 @@ public:
     int getRecipientAccount() const;
     std::string getPurpose() const;
     float getAmount() const;
-    
+
     // Setters
     void setDate(const std::string& date);
     void setSenderAccount(int senderAccount);
     void setRecipientAccount(int recipientAccount);
     void setPurpose(const std::string& purpose);
     void setAmount(float amount);
-    
+
     // Validation
     static bool isValidTransactionID(int transactionID);
     static bool isValidDate(const std::string& date);

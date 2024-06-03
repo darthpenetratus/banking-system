@@ -7,7 +7,7 @@ struct TransactionNode {
     Transaction transaction;
     TransactionNode* next;
 
-    TransactionNode(const Transaction& transaction) : transaction(transaction), next(nullptr) {}
+    TransactionNode(const Transaction& trans) : transaction(trans), next(nullptr) {}
 };
 
 #endif

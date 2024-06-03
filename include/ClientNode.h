@@ -7,7 +7,7 @@ struct ClientNode {
     Client client;
     ClientNode* next;
 
-    ClientNode(const Client& client) : client(client), next(nullptr) {}
+    ClientNode(const Client& cl) : client(cl), next(nullptr) {}
 };
 
 #endif

@@ -21,13 +21,15 @@ void BankingOperationManagement::manage() {
     int choice;
     do {
         std::cout << "-------------------------------\n";
-        std::cout << "  Banking Operations Menu\n";
+        std::cout << "  Banking Operation Management Menu\n";
         std::cout << "-------------------------------\n";
         std::cout << "1. Create Operation\n";
         std::cout << "2. View Operation\n";
         std::cout << "3. Update Operation\n";
         std::cout << "4. Delete Operation\n";
-        std::cout << "5. Back to Main Menu\n";
+        std::cout << "5. Save Operations\n";
+        std::cout << "6. Load Operations\n";
+        std::cout << "7. Back to Main Menu\n";
         std::cout << "-------------------------------\n";
         std::cout << "Choose an option: ";
         std::cin >> choice;
@@ -45,13 +47,19 @@ void BankingOperationManagement::manage() {
                 deleteOperation();
                 break;
             case 5:
+                saveOperations("operations.txt");
+                break;
+            case 6:
+                loadOperations("operations.txt");
+                break;
+            case 7:
                 std::cout << "Returning to Main Menu...\n";
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
         }
-    } while (choice != 5);
+    } while (choice != 7);
 }
 
 void BankingOperationManagement::createOperation() {
@@ -65,13 +73,17 @@ void BankingOperationManagement::createOperation() {
         }
     } while (!isUniqueID(operationID));
 
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+
     std::cout << "Enter description: ";
-    std::cin.ignore();
     std::getline(std::cin, description);
+
     std::cout << "Enter date (YYYY-MM-DD): ";
-    std::cin >> date;
+    std::getline(std::cin, date);
+
     std::cout << "Enter employee ID: ";
     std::cin >> employeeID;
+
     try {
         BankingOperation newOperation(operationID, description, date, employeeID);
         BankingOperationNode* newNode = new BankingOperationNode(newOperation);
@@ -104,10 +116,10 @@ void BankingOperationManagement::updateOperation() {
     BankingOperationNode* node = findOperationNode(operationID);
     if (node) {
         std::cout << "Enter new description: ";
-        std::cin.ignore();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
         std::getline(std::cin, description);
         std::cout << "Enter new date (YYYY-MM-DD): ";
-        std::cin >> date;
+        std::getline(std::cin, date);
         std::cout << "Enter new employee ID: ";
         std::cin >> employeeID;
         try {

@@ -27,7 +27,9 @@ void BranchManagement::manage() {
         std::cout << "2. View Branch\n";
         std::cout << "3. Update Branch\n";
         std::cout << "4. Delete Branch\n";
-        std::cout << "5. Back to Main Menu\n";
+        std::cout << "5. Save Branches\n";
+        std::cout << "6. Load Branches\n";
+        std::cout << "7. Back to Main Menu\n";
         std::cout << "-------------------------------\n";
         std::cout << "Choose an option: ";
         std::cin >> choice;
@@ -45,13 +47,19 @@ void BranchManagement::manage() {
                 deleteBranch();
                 break;
             case 5:
+                saveBranches("branches.txt");
+                break;
+            case 6:
+                loadBranches("branches.txt");
+                break;
+            case 7:
                 std::cout << "Returning to Main Menu...\n";
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
         }
-    } while (choice != 5);
+    } while (choice != 7);
 }
 
 void BranchManagement::createBranch() {
@@ -65,11 +73,14 @@ void BranchManagement::createBranch() {
         }
     } while (!isUniqueID(branchID));
 
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+
     std::cout << "Enter location: ";
-    std::cin.ignore();
     std::getline(std::cin, location);
+
     std::cout << "Enter manager ID: ";
     std::cin >> managerID;
+
     try {
         Branch newBranch(branchID, location, managerID);
         BranchNode* newNode = new BranchNode(newBranch);
@@ -102,7 +113,7 @@ void BranchManagement::updateBranch() {
     BranchNode* node = findBranchNode(branchID);
     if (node) {
         std::cout << "Enter new location: ";
-        std::cin.ignore();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
         std::getline(std::cin, location);
         std::cout << "Enter new manager ID: ";
         std::cin >> managerID;

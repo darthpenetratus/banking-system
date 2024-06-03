@@ -7,17 +7,19 @@
 #include <fstream>
 #include <sstream>
 #include <set>
+#include <limits>
+#include <iomanip>
 
 class TransactionManagement {
 public:
     TransactionManagement();
     ~TransactionManagement();
-    
+
     void manage();
     void createTransaction();
     void viewTransaction();
     void updateTransaction();
-    void cancelTransaction();
+    void deleteTransaction();
     void saveTransactions(const std::string& filename);
     void loadTransactions(const std::string& filename);
 

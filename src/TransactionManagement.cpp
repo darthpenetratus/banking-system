@@ -21,13 +21,15 @@ void TransactionManagement::manage() {
     int choice;
     do {
         std::cout << "-------------------------------\n";
-        std::cout << "  Transaction Processing Menu\n";
+        std::cout << "  Transaction Management Menu\n";
         std::cout << "-------------------------------\n";
         std::cout << "1. Create Transaction\n";
         std::cout << "2. View Transaction\n";
         std::cout << "3. Update Transaction\n";
-        std::cout << "4. Cancel Transaction\n";
-        std::cout << "5. Back to Main Menu\n";
+        std::cout << "4. Delete Transaction\n";
+        std::cout << "5. Save Transactions\n";
+        std::cout << "6. Load Transactions\n";
+        std::cout << "7. Back to Main Menu\n";
         std::cout << "-------------------------------\n";
         std::cout << "Choose an option: ";
         std::cin >> choice;
@@ -42,16 +44,22 @@ void TransactionManagement::manage() {
                 updateTransaction();
                 break;
             case 4:
-                cancelTransaction();
+                deleteTransaction();
                 break;
             case 5:
+                saveTransactions("transactions.txt");
+                break;
+            case 6:
+                loadTransactions("transactions.txt");
+                break;
+            case 7:
                 std::cout << "Returning to Main Menu...\n";
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
         }
-    } while (choice != 5);
+    } while (choice != 7);
 }
 
 void TransactionManagement::createTransaction() {
@@ -66,17 +74,25 @@ void TransactionManagement::createTransaction() {
         }
     } while (!isUniqueID(transactionID));
 
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+
     std::cout << "Enter date (YYYY-MM-DD): ";
-    std::cin >> date;
-    std::cout << "Enter sender account number: ";
+    std::getline(std::cin, date);
+
+    std::cout << "Enter sender's account: ";
     std::cin >> senderAccount;
-    std::cout << "Enter recipient account number: ";
+
+    std::cout << "Enter recipient's account: ";
     std::cin >> recipientAccount;
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+
     std::cout << "Enter purpose: ";
-    std::cin.ignore();
     std::getline(std::cin, purpose);
+
     std::cout << "Enter amount: ";
     std::cin >> amount;
+
     try {
         Transaction newTransaction(transactionID, date, senderAccount, recipientAccount, purpose, amount);
         TransactionNode* newNode = new TransactionNode(newTransaction);
@@ -110,13 +126,14 @@ void TransactionManagement::updateTransaction() {
     TransactionNode* node = findTransactionNode(transactionID);
     if (node) {
         std::cout << "Enter new date (YYYY-MM-DD): ";
-        std::cin >> date;
-        std::cout << "Enter new sender account number: ";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+        std::getline(std::cin, date);
+        std::cout << "Enter new sender's account: ";
         std::cin >> senderAccount;
-        std::cout << "Enter new recipient account number: ";
+        std::cout << "Enter new recipient's account: ";
         std::cin >> recipientAccount;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
         std::cout << "Enter new purpose: ";
-        std::cin.ignore();
         std::getline(std::cin, purpose);
         std::cout << "Enter new amount: ";
         std::cin >> amount;
@@ -135,7 +152,7 @@ void TransactionManagement::updateTransaction() {
     }
 }
 
-void TransactionManagement::cancelTransaction() {
+void TransactionManagement::deleteTransaction() {
     int transactionID;
     std::cout << "Enter transaction ID: ";
     std::cin >> transactionID;
@@ -153,7 +170,7 @@ void TransactionManagement::cancelTransaction() {
         }
         usedIDs.erase(transactionID);
         delete current;
-        std::cout << "Transaction cancelled successfully.\n";
+        std::cout << "Transaction deleted successfully.\n";
     } else {
         std::cout << "Transaction not found.\n";
     }
@@ -173,8 +190,8 @@ TransactionNode* TransactionManagement::findTransactionNode(int transactionID) {
 void TransactionManagement::printTransaction(const Transaction& transaction) {
     std::cout << "Transaction ID: " << transaction.getTransactionID() << "\n";
     std::cout << "Date: " << transaction.getDate() << "\n";
-    std::cout << "Sender Account: " << transaction.getSenderAccount() << "\n";
-    std::cout << "Recipient Account: " << transaction.getRecipientAccount() << "\n";
+    std::cout << "Sender's Account: " << transaction.getSenderAccount() << "\n";
+    std::cout << "Recipient's Account: " << transaction.getRecipientAccount() << "\n";
     std::cout << "Purpose: " << transaction.getPurpose() << "\n";
     std::cout << "Amount: " << transaction.getAmount() << "\n";
 }

@@ -75,9 +75,9 @@ bool Transaction::isValidDate(const std::string& date) {
 }
 
 bool Transaction::isValidAccount(int accountNumber) {
-    return accountNumber > 0;  // This should ideally check if the account exists in the system
+    return accountNumber > 0;
 }
 
 bool Transaction::isValidAmount(float amount) {
-    return amount > 0.0f;
+    return amount > 0.0;
 }

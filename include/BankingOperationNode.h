@@ -7,7 +7,7 @@ struct BankingOperationNode {
     BankingOperation operation;
     BankingOperationNode* next;
 
-    BankingOperationNode(const BankingOperation& operation) : operation(operation), next(nullptr) {}
+    BankingOperationNode(const BankingOperation& op) : operation(op), next(nullptr) {}
 };
 
 #endif

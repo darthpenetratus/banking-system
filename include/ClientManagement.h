@@ -7,17 +7,19 @@
 #include <fstream>
 #include <sstream>
 #include <set>
+#include <limits>
+#include <iomanip>
 
 class ClientManagement {
 public:
     ClientManagement();
     ~ClientManagement();
-    
+
     void manage();
-    void registerClient();
+    void createClient();
     void viewClient();
     void updateClient();
-    void removeClient();
+    void deleteClient();
     void saveClients(const std::string& filename);
     void loadClients(const std::string& filename);
 

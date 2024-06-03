@@ -6,18 +6,18 @@
 class BankingOperation {
 public:
     BankingOperation(int operationID, const std::string& description, const std::string& date, int employeeID);
-    
+
     // Getters
     int getOperationID() const;
     std::string getDescription() const;
     std::string getDate() const;
     int getEmployeeID() const;
-    
+
     // Setters
     void setDescription(const std::string& description);
     void setDate(const std::string& date);
     void setEmployeeID(int employeeID);
-    
+
     // Validation
     static bool isValidOperationID(int operationID);
     static bool isValidDescription(const std::string& description);

@@ -23,17 +23,19 @@ void ClientManagement::manage() {
         std::cout << "-------------------------------\n";
         std::cout << "  Client Management Menu\n";
         std::cout << "-------------------------------\n";
-        std::cout << "1. Register Client\n";
+        std::cout << "1. Create Client\n";
         std::cout << "2. View Client\n";
         std::cout << "3. Update Client\n";
-        std::cout << "4. Remove Client\n";
-        std::cout << "5. Back to Main Menu\n";
+        std::cout << "4. Delete Client\n";
+        std::cout << "5. Save Clients\n";
+        std::cout << "6. Load Clients\n";
+        std::cout << "7. Back to Main Menu\n";
         std::cout << "-------------------------------\n";
         std::cout << "Choose an option: ";
         std::cin >> choice;
         switch (choice) {
             case 1:
-                registerClient();
+                createClient();
                 break;
             case 2:
                 viewClient();
@@ -42,19 +44,25 @@ void ClientManagement::manage() {
                 updateClient();
                 break;
             case 4:
-                removeClient();
+                deleteClient();
                 break;
             case 5:
+                saveClients("clients.txt");
+                break;
+            case 6:
+                loadClients("clients.txt");
+                break;
+            case 7:
                 std::cout << "Returning to Main Menu...\n";
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
         }
-    } while (choice != 5);
+    } while (choice != 7);
 }
 
-void ClientManagement::registerClient() {
+void ClientManagement::createClient() {
     int clientID;
     std::string name, address, phone;
     do {
@@ -65,20 +73,24 @@ void ClientManagement::registerClient() {
         }
     } while (!isUniqueID(clientID));
 
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+
     std::cout << "Enter name: ";
-    std::cin.ignore();
     std::getline(std::cin, name);
+
     std::cout << "Enter address: ";
     std::getline(std::cin, address);
+
     std::cout << "Enter phone: ";
     std::getline(std::cin, phone);
+
     try {
         Client newClient(clientID, name, address, phone);
         ClientNode* newNode = new ClientNode(newClient);
         newNode->next = head;
         head = newNode;
         usedIDs.insert(clientID);
-        std::cout << "Client registered successfully.\n";
+        std::cout << "Client created successfully.\n";
     } catch (const std::invalid_argument& e) {
         std::cout << "Invalid input: " << e.what() << "\n";
     }
@@ -104,7 +116,7 @@ void ClientManagement::updateClient() {
     ClientNode* node = findClientNode(clientID);
     if (node) {
         std::cout << "Enter new name: ";
-        std::cin.ignore();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
         std::getline(std::cin, name);
         std::cout << "Enter new address: ";
         std::getline(std::cin, address);
@@ -123,7 +135,7 @@ void ClientManagement::updateClient() {
     }
 }
 
-void ClientManagement::removeClient() {
+void ClientManagement::deleteClient() {
     int clientID;
     std::cout << "Enter client ID: ";
     std::cin >> clientID;
@@ -141,7 +153,7 @@ void ClientManagement::removeClient() {
         }
         usedIDs.erase(clientID);
         delete current;
-        std::cout << "Client removed successfully.\n";
+        std::cout << "Client deleted successfully.\n";
     } else {
         std::cout << "Client not found.\n";
     }
