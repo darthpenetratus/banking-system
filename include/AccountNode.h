@@ -7,7 +7,7 @@ struct AccountNode {
     Account account;
     AccountNode* next;
 
-    AccountNode(const Account& account) : account(account), next(nullptr) {}
+    AccountNode(const Account& acc) : account(acc), next(nullptr) {}
 };
 
 #endif

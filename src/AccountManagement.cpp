@@ -1,4 +1,5 @@
 #include "../include/AccountManagement.h"
+#include <algorithm>
 
 // Constructor
 AccountManagement::AccountManagement() : head(nullptr) {}
@@ -17,6 +18,17 @@ bool AccountManagement::isUniqueID(int accountNumber) {
     return usedIDs.find(accountNumber) == usedIDs.end();
 }
 
+AccountNode* AccountManagement::findAccountNode(int accountNumber) {
+    AccountNode* current = head;
+    while (current != nullptr) {
+        if (current->account.getAccountNumber() == accountNumber) {
+            return current;
+        }
+        current = current->next;
+    }
+    return nullptr;
+}
+
 void AccountManagement::manage() {
     int choice;
     do {
@@ -27,7 +39,14 @@ void AccountManagement::manage() {
         std::cout << "2. View Account\n";
         std::cout << "3. Update Account\n";
         std::cout << "4. Delete Account\n";
-        std::cout << "5. Back to Main Menu\n";
+        std::cout << "5. Search Accounts\n";
+        std::cout << "6. Sort Accounts\n";
+        std::cout << "7. Calculate Total Balance\n";
+        std::cout << "8. Calculate Average Balance\n";
+        std::cout << "9. Calculate Highest Balance\n";
+        std::cout << "10. Save Accounts\n";
+        std::cout << "11. Load Accounts\n";
+        std::cout << "12. Back to Main Menu\n";
         std::cout << "-------------------------------\n";
         std::cout << "Choose an option: ";
         std::cin >> choice;
@@ -45,13 +64,34 @@ void AccountManagement::manage() {
                 deleteAccount();
                 break;
             case 5:
+                searchAccounts();
+                break;
+            case 6:
+                sortAccounts();
+                break;
+            case 7:
+                calculateTotalBalance();
+                break;
+            case 8:
+                calculateAverageBalance();
+                break;
+            case 9:
+                calculateHighestBalance();
+                break;
+            case 10:
+                saveAccounts("accounts.txt");
+                break;
+            case 11:
+                loadAccounts("accounts.txt");
+                break;
+            case 12:
                 std::cout << "Returning to Main Menu...\n";
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
         }
-    } while (choice != 5);
+    } while (choice != 12);
 }
 
 void AccountManagement::createAccount() {
@@ -65,16 +105,21 @@ void AccountManagement::createAccount() {
             std::cout << "Account number already in use. Please enter a different number.\n";
         }
     } while (!isUniqueID(accountNumber));
-    
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+
     std::cout << "Enter owner: ";
-    std::cin.ignore();
     std::getline(std::cin, owner);
+
     std::cout << "Enter type (Savings/Checking/Business): ";
-    std::cin >> type;
+    std::getline(std::cin, type);
+
     std::cout << "Enter currency (USD/EUR/GBP): ";
-    std::cin >> currency;
+    std::getline(std::cin, currency);
+
     std::cout << "Enter balance: ";
     std::cin >> balance;
+
     try {
         Account newAccount(accountNumber, owner, type, currency, balance);
         AccountNode* newNode = new AccountNode(newAccount);
@@ -108,12 +153,12 @@ void AccountManagement::updateAccount() {
     AccountNode* node = findAccountNode(accountNumber);
     if (node) {
         std::cout << "Enter new owner: ";
-        std::cin.ignore();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
         std::getline(std::cin, owner);
         std::cout << "Enter new type (Savings/Checking/Business): ";
-        std::cin >> type;
+        std::getline(std::cin, type);
         std::cout << "Enter new currency (USD/EUR/GBP): ";
-        std::cin >> currency;
+        std::getline(std::cin, currency);
         std::cout << "Enter new balance: ";
         std::cin >> balance;
         try {
@@ -131,46 +176,219 @@ void AccountManagement::updateAccount() {
 }
 
 void AccountManagement::deleteAccount() {
-    int accountNumber;
-    std::cout << "Enter account number: ";
-    std::cin >> accountNumber;
-    AccountNode* prev = nullptr;
-    AccountNode* current = head;
-    while (current != nullptr && current->account.getAccountNumber() != accountNumber) {
-        prev = current;
-        current = current->next;
-    }
-    if (current != nullptr) {
-        if (prev != nullptr) {
-            prev->next = current->next;
-        } else {
-            head = current->next;
+    int choice;
+    std::cout << "Delete by: 1. Account Number 2. Owner 3. Balance\n";
+    std::cin >> choice;
+
+    if (choice == 1) {
+        int accountNumber;
+        std::cout << "Enter account number: ";
+        std::cin >> accountNumber;
+        AccountNode* prev = nullptr;
+        AccountNode* current = head;
+        while (current != nullptr && current->account.getAccountNumber() != accountNumber) {
+            prev = current;
+            current = current->next;
         }
-        usedIDs.erase(accountNumber);
-        delete current;
-        std::cout << "Account deleted successfully.\n";
-    } else {
+        if (current != nullptr) {
+            if (prev != nullptr) {
+                prev->next = current->next;
+            } else {
+                head = current->next;
+            }
+            usedIDs.erase(accountNumber);
+            delete current;
+            std::cout << "Account deleted successfully.\n";
+        } else {
+            std::cout << "Account not found.\n";
+        }
+    } else if (choice == 2) {
+        std::string owner;
+        std::cout << "Enter owner: ";
+        std::cin.ignore();
+        std::getline(std::cin, owner);
+        AccountNode* prev = nullptr;
+        AccountNode* current = head;
+        while (current != nullptr) {
+            if (current->account.getOwner() == owner) {
+                if (prev != nullptr) {
+                    prev->next = current->next;
+                } else {
+                    head = current->next;
+                }
+                usedIDs.erase(current->account.getAccountNumber());
+                delete current;
+                std::cout << "Account deleted successfully.\n";
+                break;
+            }
+            prev = current;
+            current = current->next;
+        }
+        if (current == nullptr) {
+            std::cout << "Account not found.\n";
+        }
+    } else if (choice == 3) {
+        float balance;
+        std::cout << "Enter balance: ";
+        std::cin >> balance;
+        AccountNode* prev = nullptr;
+        AccountNode* current = head;
+        while (current != nullptr) {
+            if (current->account.getBalance() == balance) {
+                if (prev != nullptr) {
+                    prev->next = current->next;
+                } else {
+                    head = current->next;
+                }
+                usedIDs.erase(current->account.getAccountNumber());
+                delete current;
+                std::cout << "Account deleted successfully.\n";
+                break;
+            }
+            prev = current;
+            current = current->next;
+        }
+        if (current == nullptr) {
+            std::cout << "Account not found.\n";
+        }
+    }
+}
+
+void AccountManagement::searchAccounts() {
+    int choice;
+    std::cout << "Search by: 1. Account Number 2. Owner 3. Balance\n";
+    std::cin >> choice;
+
+    if (choice == 1) {
+        int accountNumber;
+        std::cout << "Enter account number: ";
+        std::cin >> accountNumber;
+        AccountNode* current = head;
+        while (current != nullptr) {
+            if (current->account.getAccountNumber() == accountNumber) {
+                printAccount(current->account);
+                return;
+            }
+            current = current->next;
+        }
+        std::cout << "Account not found.\n";
+    } else if (choice == 2) {
+        std::string owner;
+        std::cout << "Enter owner: ";
+        std::cin.ignore();
+        std::getline(std::cin, owner);
+        AccountNode* current = head;
+        while (current != nullptr) {
+            if (current->account.getOwner() == owner) {
+                printAccount(current->account);
+                return;
+            }
+            current = current->next;
+        }
+        std::cout << "Account not found.\n";
+    } else if (choice == 3) {
+        float balance;
+        std::cout << "Enter balance: ";
+        std::cin >> balance;
+        AccountNode* current = head;
+        while (current != nullptr) {
+            if (current->account.getBalance() == balance) {
+                printAccount(current->account);
+                return;
+            }
+            current = current->next;
+        }
         std::cout << "Account not found.\n";
     }
 }
 
-AccountNode* AccountManagement::findAccountNode(int accountNumber) {
+void AccountManagement::sortAccounts() {
+    int choice;
+    std::cout << "Sort by: 1. Account Number 2. Owner 3. Balance\n";
+    std::cin >> choice;
+
+    // Convert linked list to array for easier sorting
+    int count = 0;
     AccountNode* current = head;
     while (current != nullptr) {
-        if (current->account.getAccountNumber() == accountNumber) {
-            return current;
+        count++;
+        current = current->next;
+    }
+
+    Account** accounts = new Account*[count];
+    current = head;
+    for (int i = 0; i < count; i++) {
+        accounts[i] = &current->account;
+        current = current->next;
+    }
+
+    if (choice == 1) {
+        std::sort(accounts, accounts + count, [](Account* a, Account* b) {
+            return a->getAccountNumber() < b->getAccountNumber();
+        });
+    } else if (choice == 2) {
+        std::sort(accounts, accounts + count, [](Account* a, Account* b) {
+            return a->getOwner() < b->getOwner();
+        });
+    } else if (choice == 3) {
+        std::sort(accounts, accounts + count, [](Account* a, Account* b) {
+            return a->getBalance() < b->getBalance();
+        });
+    }
+
+    std::cout << "Sorted Accounts:\n";
+    for (int i = 0; i < count; i++) {
+        printAccount(*accounts[i]);
+    }
+
+    delete[] accounts;
+}
+
+void AccountManagement::calculateTotalBalance() {
+    float totalBalance = 0.0;
+    AccountNode* current = head;
+    while (current != nullptr) {
+        totalBalance += current->account.getBalance();
+        current = current->next;
+    }
+    std::cout << "Total Balance: " << totalBalance << "\n";
+}
+
+void AccountManagement::calculateAverageBalance() {
+    float totalBalance = 0.0;
+    int count = 0;
+    AccountNode* current = head;
+    while (current != nullptr) {
+        totalBalance += current->account.getBalance();
+        count++;
+        current = current->next;
+    }
+    std::cout << "Average Balance: " << (totalBalance / count) << "\n";
+}
+
+void AccountManagement::calculateHighestBalance() {
+    float highestBalance = 0.0;
+    AccountNode* current = head;
+    while (current != nullptr) {
+        if (current->account.getBalance() > highestBalance) {
+            highestBalance = current->account.getBalance();
         }
         current = current->next;
     }
-    return nullptr;
+    std::cout << "Highest Balance: " << highestBalance << "\n";
 }
 
 void AccountManagement::printAccount(const Account& account) {
-    std::cout << "Account Number: " << account.getAccountNumber() << "\n";
-    std::cout << "Owner: " << account.getOwner() << "\n";
-    std::cout << "Type: " << account.getType() << "\n";
-    std::cout << "Currency: " << account.getCurrency() << "\n";
-    std::cout << "Balance: " << account.getBalance() << "\n";
+    std::cout << std::left << std::setw(15) << "Account Number"
+              << std::setw(25) << "Owner"
+              << std::setw(15) << "Type"
+              << std::setw(10) << "Currency"
+              << std::setw(10) << "Balance" << "\n";
+    std::cout << std::left << std::setw(15) << account.getAccountNumber()
+              << std::setw(25) << account.getOwner()
+              << std::setw(15) << account.getType()
+              << std::setw(10) << account.getCurrency()
+              << std::setw(10) << account.getBalance() << "\n";
 }
 
 void AccountManagement::saveAccounts(const std::string& filename) {

@@ -27,7 +27,9 @@ void EmployeeManagement::manage() {
         std::cout << "2. View Employee\n";
         std::cout << "3. Update Employee\n";
         std::cout << "4. Remove Employee\n";
-        std::cout << "5. Back to Main Menu\n";
+        std::cout << "5. Save Employees\n";
+        std::cout << "6. Load Employees\n";
+        std::cout << "7. Back to Main Menu\n";
         std::cout << "-------------------------------\n";
         std::cout << "Choose an option: ";
         std::cin >> choice;
@@ -45,13 +47,19 @@ void EmployeeManagement::manage() {
                 removeEmployee();
                 break;
             case 5:
+                saveEmployees("employees.txt");
+                break;
+            case 6:
+                loadEmployees("employees.txt");
+                break;
+            case 7:
                 std::cout << "Returning to Main Menu...\n";
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
         }
-    } while (choice != 5);
+    } while (choice != 7);
 }
 
 void EmployeeManagement::addEmployee() {
@@ -65,13 +73,17 @@ void EmployeeManagement::addEmployee() {
         }
     } while (!isUniqueID(employeeID));
 
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+
     std::cout << "Enter name: ";
-    std::cin.ignore();
     std::getline(std::cin, name);
+
     std::cout << "Enter position: ";
-    std::cin >> position;
+    std::getline(std::cin, position);
+
     std::cout << "Enter branch ID: ";
     std::cin >> branchID;
+
     try {
         Employee newEmployee(employeeID, name, position, branchID);
         EmployeeNode* newNode = new EmployeeNode(newEmployee);
@@ -104,10 +116,10 @@ void EmployeeManagement::updateEmployee() {
     EmployeeNode* node = findEmployeeNode(employeeID);
     if (node) {
         std::cout << "Enter new name: ";
-        std::cin.ignore();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
         std::getline(std::cin, name);
         std::cout << "Enter new position: ";
-        std::cin >> position;
+        std::getline(std::cin, position);
         std::cout << "Enter new branch ID: ";
         std::cin >> branchID;
         try {

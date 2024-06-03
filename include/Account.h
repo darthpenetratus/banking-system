@@ -6,20 +6,20 @@
 class Account {
 public:
     Account(int accountNumber, const std::string& owner, const std::string& type, const std::string& currency, float balance);
-    
+
     // Getters
     int getAccountNumber() const;
     std::string getOwner() const;
     std::string getType() const;
     std::string getCurrency() const;
     float getBalance() const;
-    
+
     // Setters
     void setOwner(const std::string& owner);
     void setType(const std::string& type);
     void setCurrency(const std::string& currency);
     void setBalance(float balance);
-    
+
     // Validation
     static bool isValidAccountNumber(int accountNumber);
     static bool isValidOwner(const std::string& owner);

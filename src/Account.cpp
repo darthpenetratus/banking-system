@@ -75,5 +75,5 @@ bool Account::isValidCurrency(const std::string& currency) {
 }
 
 bool Account::isValidBalance(float balance) {
-    return balance >= 0.0f;
+    return balance >= 0.0;
 }

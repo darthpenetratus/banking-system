@@ -7,12 +7,14 @@
 #include <fstream>
 #include <sstream>
 #include <set>
+#include <limits>
+#include <iomanip>
 
 class EmployeeManagement {
 public:
     EmployeeManagement();
     ~EmployeeManagement();
-    
+
     void manage();
     void addEmployee();
     void viewEmployee();
