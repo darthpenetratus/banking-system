@@ -16,7 +16,7 @@ The Banking System application is a console-based program designed to manage var
 ## Prerequisites
 
 Ensure you have a C++ compiler installed on your system:
-- For Windows: [MinGW](http://www.mingw.org/)
+- For Windows: [MinGW](https://www.msys2.org/)
 - For macOS: [Xcode Command Line Tools](https://developer.apple.com/xcode/features/)
 
 ## Directory Structure
@@ -71,7 +71,11 @@ banking-system/
 ### On Windows
 
 1. **Install MinGW**:
-   Download and install MinGW from [MinGW](http://www.mingw.org/). Ensure to install `mingw32-gcc-g++` during setup.
+   Download and install MinGW from [MinGW](https://github.com/msys2/msys2-installer/releases/download/2024-01-13/msys2-x86_64-20240113.exe). Ensure to install `mingw32-gcc-g++` during setup.
+
+   In this terminal, install the MinGW-w64 toolchain by running the following command:
+   ```sh
+   pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
 
 2. **Compile the Program**:
    Open the Command Prompt and navigate to the project directory. Run the following commands:
