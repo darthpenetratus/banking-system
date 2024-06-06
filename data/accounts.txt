@@ -1,2 +1,0 @@
-1,John Doe,Savings,USD,1000
-2,John Doe,Checking,USD,500
