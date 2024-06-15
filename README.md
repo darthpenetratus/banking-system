@@ -102,7 +102,7 @@ banking-system/
 
    ```sh
    cd /path/to/your/project/directory
-   g++ -Iinclude -o banking_system src/*.cpp
+   g++ -std=c++11 -Iinclude src/*.cpp -o banking_system
 
 3. **Run the Program**:
    Execute the compiled program:
